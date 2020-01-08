@@ -1,6 +1,4 @@
-import { Component, OnInit } from '@angular/core'
-import { FormControl } from '@angular/forms';
-import { MCTS } from '../Strategy/MCTS/MCTS';
+import {Component} from '@angular/core'
 
 @Component({
     selector: 'runtimeAnalysist',
@@ -10,6 +8,7 @@ import { MCTS } from '../Strategy/MCTS/MCTS';
 
 
 export class RuntimeAnalysist {
+    //TODO dopisanie naszych klas
     names = [
         'Greedy',
         'Alpha-Beta Pruning',
@@ -17,7 +16,10 @@ export class RuntimeAnalysist {
         'Temporal Difference Learning',
         'Temporal Difference Learning (Trained)',
         'Monte Carlo Tree Search',
-        'Ultimate (Combined Strategy)'
+        'Ultimate (Combined Strategy)',
+        'Monte Carlo Tree Search - Nasza implementacja',
+        'TD Learning - Nasza implementacja',
+        'TD Trained - Nasza implementacja'
     ]
     // INPUT
     runtime_dict;
@@ -27,7 +29,6 @@ export class RuntimeAnalysist {
     update(dic) {
         this.runtime_dict = dic;
         this.process()
-
     }
 
     process() {
@@ -36,9 +37,8 @@ export class RuntimeAnalysist {
             var strategy = this.names[parseInt(k.split('-')[0])];
             var depth = k.split('-')[1];
             var time = this.runtime_dict[k][0];
-            this.runtime_arr.push({ 'strategy': strategy, 'depth': depth, 'time': time });
+            this.runtime_arr.push({'strategy': strategy, 'depth': depth, 'time': time});
         }
-
     }
 
 
@@ -47,11 +47,13 @@ export class RuntimeAnalysist {
             this.names.indexOf(x.strategy) - this.names.indexOf(y.strategy)
         ));
     }
+
     sort_time() {
         this.runtime_arr.sort((x, y) => (
             x.time - y.time
         ));
     }
+
     sort_depth() {
         this.runtime_arr.sort((x, y) => (
             x.depth - y.depth

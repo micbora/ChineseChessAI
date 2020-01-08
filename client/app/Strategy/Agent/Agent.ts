@@ -1,3 +1,7 @@
+/**
+ * Klasa bazowa strategi gracza.
+ */
+
 import { Piece } from '../../Objects/Piece';
 import { Rule } from '../../ChineseChess/Rule/Rule'
 import { InitGame } from '../../ChineseChess/InitGame/init';
@@ -27,22 +31,37 @@ export class Agent {
         this.strategy = strategy;
         // console.log("Agent")
     }
+
+    /**
+     * Ustawia agenta przeciwnika.
+     * @param oppoAgent agent przeciwnika.
+     */
     setOppoAgent(oppoAgent) {
         this.oppoAgent = oppoAgent;
         this.oppoPieces = oppoAgent.myPieces;
         this.updateState();
     }
+
+    /**
+     * Aktualizacja statusu gracza.
+     */
     // return | 1:win | -1:lose | 0:continue
     updateState() {
         this.updateBoardState();
         this.computeLegalMoves();
     }
 
+    /**
+     * Wyznacza dozwolone ruchy gracza.
+     */
     // compute legals moves for my pieces after state updated
     computeLegalMoves() {
         this.legalMoves = Rule.allPossibleMoves(this.myPieces, this.boardState, this.team);
     }
 
+    /**
+     * Aktualizacja stanu planszy.
+     */
     // update board state by pieces
     updateBoardState() {
         var state = {};
@@ -51,6 +70,12 @@ export class Agent {
         this.boardState = state;
     }
 
+    /**
+     * Przestawienie figury przez gracza.
+     * @param piece figura
+     * @param pos pozcja
+     * @param isCapture bicie
+     */
     movePieceTo(piece: Piece, pos, isCapture = undefined) {
         piece.moveTo(pos);
         this.addMove(piece.name, pos);
@@ -59,6 +84,10 @@ export class Agent {
         if (isCapture) this.captureOppoPiece(pos);
     }
 
+    /**
+     * Bicie figury przeciwnika.
+     * @param pos pozycja
+     */
     // capture piece of opponent
     // pos: position of piece to be captured
     captureOppoPiece(pos) {
@@ -70,6 +99,11 @@ export class Agent {
         }
     }
 
+    /**
+     * Dodaj ruch do listy wykonanych.
+     * @param pieceName nazwa figury
+     * @param pos pozycja
+     */
     // add move to pastMoves
     addMove(pieceName, pos) {
         this.pastMoves.push({ "name": pieceName, "position": pos });

@@ -1,13 +1,13 @@
 /**
- * Strategia ucząca TD.
+ * Nasza Strategia ucząca TD.
  */
 import { Agent } from '../Agent/Agent'
 import { State } from '../State/State'
 import { EvalFnAgent } from '../EvalFn/EvaluationFn'
 import { Evaluation } from '../_Param/Evaluation'
 
-export class TDLearner extends EvalFnAgent {
-    strategy = 3;
+export class TDLearner2 extends EvalFnAgent {
+    strategy = 11;
     weights = [];
     // INIT_WEIGHTS = [20, 15, 30, 7, 20, 0, 20];
     // INIT_WEIGHTS = [0, 0, 0, 0, 0, 0, 0];
@@ -24,7 +24,7 @@ export class TDLearner extends EvalFnAgent {
     copy() {
         // console.log(this.pastMoves)
         // console.log(this.copyMoves())
-        return new TDLearner(this.team, this.DEPTH, this.weights, this.myPieces.map(x => x.copy()), this.copyMoves());
+        return new TDLearner2(this.team, this.DEPTH, this.weights, this.myPieces.map(x => x.copy()), this.copyMoves());
     }
 
     merge_arr(x, y) {

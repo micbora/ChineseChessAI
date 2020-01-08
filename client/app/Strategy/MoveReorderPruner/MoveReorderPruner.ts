@@ -1,4 +1,6 @@
-
+/**
+ * Implementacja strategii MoveReorder.
+ */
 import { Agent } from '../Agent/Agent'
 import { State } from '../State/State'
 import { EvalFnAgent } from '../EvalFn/EvaluationFn'

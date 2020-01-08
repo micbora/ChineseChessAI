@@ -1,3 +1,7 @@
+/**
+ * Ocena wartości figur.
+ */
+
 export class Evaluation {
 
     static pieceValues = {

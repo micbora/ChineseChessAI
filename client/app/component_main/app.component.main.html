@@ -37,7 +37,7 @@
 			<sm-button *ngIf="board.simulation_state < 0 " class="fluid medium teal control " icon="twitter " (click)="board.click_simulate() ">Simulate </sm-button>
 			<div class="margin"></div>
 
-
+<!--TODO uzupełnić o nasze-->
 			<div id="redAgentSelection">
 				<div class=" margin "></div>
 				<div *ngIf="!board.humanMode ">
@@ -48,9 +48,12 @@
 						<option>1-ABPruning</option>
 						<option>2-MoveReorder</option>
 						<option>3-TDLeaner</option>
-						<option>4-TDLean(Trained)</option>
+						<option>4-TDLearn(Trained)</option>
 						<option>5-MCTS</option>
 						<option>6-Ultimate</option>
+						<option>10-NaszMCTS</option>
+						<option>11-NaszTDLeaner</option>
+						<option>12-NaszTDLearn(Trained)</option>
 					</sm-select>
 
 				</div>
@@ -64,7 +67,7 @@
 					<option>6</option>
 					<option>7</option>
 				</sm-select>
-				<sm-select class="fluid" *ngIf="board.redAgentType==5" placeholder="Simulations" (change)="board.chooseRedSimulations($event.target.value) ">
+				<sm-select class="fluid" *ngIf="board.redAgentType==5 || board.redAgentType==10" placeholder="Simulations" (change)="board.chooseRedSimulations($event.target.value) ">
 					<option>1000</option>
 					<option>2000</option>
 					<option>3000</option>
@@ -85,6 +88,9 @@
 				<option>4-TDLean(Trained)</option>
 				<option>5-MCTS</option>
 				<option>6-Ultimate</option>
+				<option>10-NaszMCTS</option>
+				<option>11-NaszTDLeaner</option>
+				<option>12-NaszTDLearn(Trained)</option>
 			</sm-select>
 			<div class=" margin "></div>
 			<sm-select class="fluid" *ngIf="board.blackAgentType>0 && board.blackAgentType!=5" placeholder="Depth (2)" (change)="board.chooseBlackAgentDepth($event.target.value) ">
@@ -96,7 +102,7 @@
 				<option>6</option>
 				<option>7</option>
 			</sm-select>
-			<sm-select class="fluid" *ngIf="board.blackAgentType==5" placeholder="Simulations" (change)="board.chooseBlackSimulations($event.target.value) ">
+			<sm-select class="fluid" *ngIf="board.blackAgentType==5 || board.blackAgentType==10" placeholder="Simulations" (change)="board.chooseBlackSimulations($event.target.value) ">
 				<option>1000</option>
 				<option>2000</option>
 				<option>3000</option>

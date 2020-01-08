@@ -14,6 +14,9 @@ import { MCTS } from '../Strategy/MCTS/MCTS';
 import { MoveReorderPruner } from '../Strategy/MoveReorderPruner/MoveReorderPruner';
 import { HumanAgent } from '../Strategy/Agent/HumanAgent';
 import { Agent } from '../Strategy/Agent/Agent';
+import {MCTS2} from "../Strategy/MCTS2/MCTS2";
+import {TDLearnerTrained2} from "../Strategy/TDLearner2/TDLearnerTrained2";
+import {TDLearner2} from "../Strategy/TDLearner2/TDLearner2";
 
 @Component({
     selector: 'board',
@@ -82,7 +85,9 @@ export class BoardComponent implements OnInit {
         this.weigths_2 = this.INIT_WEIGHT;
     }
 
-
+    /**
+     * Zmiana trybu gry.
+     */
     changeMode() {
         this.humanMode = !this.humanMode;
         this.simulation_state = -1;
@@ -90,6 +95,11 @@ export class BoardComponent implements OnInit {
         this.clear_results();
         this.initGame();
     }
+
+    /**
+     * Czy ruch jest możliwy.
+     * @param pos pozycja
+     */
     isPossibleMove(pos) {
         if (!this.selectedPiece) return false;
         var moves = this.state.redAgent.legalMoves[this.selectedPiece.name];
@@ -105,6 +115,10 @@ export class BoardComponent implements OnInit {
         }
     }
 
+    /**
+     * Parsowanie typu strategii.
+     * @param desc opis
+     */
     parse_agentType(desc) {
         if (desc == "") {
             return 0;
@@ -112,12 +126,21 @@ export class BoardComponent implements OnInit {
         return parseInt(desc.split('-')[0]);
     }
 
+    /**
+     * Ustawienie strategii czerwonemu graczowi.
+     * @param desc opis
+     */
     chooseRedAgent(desc) {
         this.onClear.emit();
         this.simulation_state = -1;
         this.redAgentType = this.parse_agentType(desc);
 
     }
+
+    /**
+     * Ustawienie strategii czarnemu graczowi.
+     * @param desc opis
+     */
     chooseBlackAgent(desc) {
         this.onClear.emit();
         this.simulation_state = -1;
@@ -125,24 +148,46 @@ export class BoardComponent implements OnInit {
         this.clear_results();
         if (this.humanMode) this.initGame();
     }
+
+    /**
+     * Ustawienie głębokości czerwonego agenta.
+     * @param depth głębokość
+     */
     chooseRedAgentDepth(depth) {
         this.redAgentDepth = parseInt(depth);
     }
+
+    /**
+     * Ustawienie głębokości czarnego agenta.
+     * @param depth głębokość
+     */
     chooseBlackAgentDepth(depth) {
         this.blackAgentDepth = parseInt(depth);
         if (this.humanMode) this.initGame();
     }
 
+    /**
+     * Wybór liczby symulacji czarnego.
+     * @param n liczba symulacji
+     */
     chooseBlackSimulations(n) {
         this.blackAgentSimulations = parseInt(n);
         // console.log(this.blackAgentSimulations)
         if (this.humanMode) this.initGame();
     }
+
+    /**
+     * Wybór liczby symulacji czerwonego.
+     * @param n liczba symulacji
+     */
     chooseRedSimulations(n) {
         this.redAgentSimulations = parseInt(n);
     }
 
     /***************** LIFE_CYCLE *******************/
+    /**
+     * Inicjalizacja strony.
+     */
     ngOnInit() {
         this.initDummyButtons();
         this.initGame();
@@ -156,6 +201,9 @@ export class BoardComponent implements OnInit {
         this.nSimulations_input = parseInt(n);
     }
 
+    /**
+     * Inicjalizacja gry.
+     */
     initGame() {
         this.selectedPiece = undefined;
         this.lastState = null;
@@ -172,6 +220,10 @@ export class BoardComponent implements OnInit {
             case 4: { redAgent = new TDLearnerTrained(this.redTeam, this.redAgentDepth); break; }
             case 5: { redAgent = new MCTS(this.redTeam, this.redAgentSimulations); break; }
             case 6: { redAgent = new MoveReorderPruner(this.redTeam, this.redAgentDepth); break; }
+            case 10: { redAgent = new MCTS2(this.redTeam, this.redAgentSimulations); break; }
+            case 11: { redAgent = new TDLearner2(this.redTeam, this.redAgentDepth, this.weigths_1); break; }
+            case 12: { redAgent = new TDLearnerTrained2(this.redTeam, this.redAgentDepth); break; }
+            //TODO - dopisanie naszych
             default: redAgent = new HumanAgent(this.redTeam); break;
         }
         var blackAgent;
@@ -185,11 +237,18 @@ export class BoardComponent implements OnInit {
             // TDLearner
             case 5: { blackAgent = new MCTS(this.blackTeam, this.blackAgentSimulations); break; }
             case 6: { blackAgent = new MoveReorderPruner(this.blackTeam, this.blackAgentDepth); break; }
+            case 10: { blackAgent = new MCTS2(this.blackTeam, this.blackAgentSimulations); break; }
+            case 11: { blackAgent = new TDLearner2(this.blackTeam, this.blackAgentDepth, this.weigths_2); break; }
+            case 12: { blackAgent = new TDLearnerTrained2(this.blackTeam, this.blackAgentDepth); break; }
+            // TODO dodanie naszych
             default: blackAgent = new GreedyAgent(this.blackTeam); break;
         }
         this.state = new State(redAgent, blackAgent);
     }
 
+    /**
+     * Reakcja na przycisk symulacji.
+     */
     // response for clicking simulate
     click_simulate() {
         this.nSimulations = this.nSimulations_input;
@@ -197,20 +256,30 @@ export class BoardComponent implements OnInit {
         this.simulate();
     }
 
-
+    /**
+     * Symulacja gry.
+     */
     simulate() {
         this.initGame();
         this.state.switchTurn();
         this.continue_simulate();
     }
+
+    /**
+     * Symulacja kolejnego ruchu.
+     */
     continue_simulate() {
         this.simulation_state = 1;
         this.switchTurn();
     }
 
+    /**
+     * Zakończenie symulacji.
+     */
     stop_simulate() {
         this.simulation_state = 0;
     }
+
     clickDummyPiece(piece: Piece) {
         if (!this.isPossibleMove(piece.position) || this.state.endFlag != null) return;
         this.humanMove(piece);
@@ -226,6 +295,10 @@ export class BoardComponent implements OnInit {
         this.humanMove(piece);
     }
 
+    /**
+     * Ruch gracza-człowieka
+     * @param piece figura
+     */
     humanMove(piece: Piece) {
         // before human makes move, make a copy of current state
         this.copyCurrentState();
@@ -233,6 +306,10 @@ export class BoardComponent implements OnInit {
         this.switchTurn();
     }
 
+    /**
+     * Zakończenie gry.
+     * @param end_state stan gry
+     */
     // end_state: -1: lose | 0: draw | 1: win
     end_game(end_state) {
         var red_win = end_state * this.state.playingTeam;
@@ -246,7 +323,9 @@ export class BoardComponent implements OnInit {
         else this.selectedPiece = undefined;
     }
 
-
+    /**
+     * Zakończenie symulacji.
+     */
     end_simulation() {
         // console.log(this.results);
         this.nSimulations -= 1;
@@ -269,7 +348,9 @@ export class BoardComponent implements OnInit {
         this.onTimeUpdated.emit();
     }
 
-
+    /**
+     * Przełączenie ruchu na kolejnego gracza.
+     */
     // switch game turn
     switchTurn() {
         // stop simulation
@@ -297,7 +378,7 @@ export class BoardComponent implements OnInit {
                 var move = result['move'];
                 var time = parseInt(result['time']);
                 var state_feature = result['state_feature'];
-                if (time) this.report_runtime(agent.strategy, (agent instanceof MCTS ? agent.N_SIMULATION : agent.DEPTH), time)
+                if (time) this.report_runtime(agent.strategy, ((agent instanceof MCTS || agent instanceof MCTS2) ? agent.N_SIMULATION : agent.DEPTH), time)
                 if (state_feature) agent.save_state(state_feature);
                 if (!move) { // FAIL
                     this.end_game(-1);
@@ -314,6 +395,10 @@ export class BoardComponent implements OnInit {
             }
         );
     }
+
+    /**
+     * Powrót do poprzedniego stanu planszy.
+     */
     // reverse game state to previous state
     go2PreviousState() {
         if (!this.lastState) return;
@@ -321,6 +406,9 @@ export class BoardComponent implements OnInit {
         this.lastState = null;
     }
 
+    /**
+     * Kopia bieżącego stanu gry.
+     */
     copyCurrentState() {
         this.lastState = this.state.copy();
     }

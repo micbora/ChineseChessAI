@@ -1,3 +1,6 @@
+/**
+ * Figura na planszy.
+ */
 export class Piece {
 
     name: string;
@@ -12,7 +15,10 @@ export class Piece {
         return new Piece(dict.name, dict.position);
     }
 
-
+    /**
+     * Przeniesienie figury na inną pozycję.
+     * @param newPos
+     */
     moveTo(newPos) {
         this.position = newPos;
     }

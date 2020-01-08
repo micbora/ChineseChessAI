@@ -1,4 +1,6 @@
-
+/**
+ * Gracz realizujący algorytm zachłanny.
+ */
 import { Agent } from '../Agent/Agent'
 import { Evaluation } from '../_Param/Evaluation'
 
@@ -32,7 +34,11 @@ export class GreedyAgent extends Agent {
         return [piece, toPos];
     }
 
-
+    /**
+     * Sprawdza "wartość" posunięcia.
+     * @param pieceName figura
+     * @param toPos nowa pozycja
+     */
     getValueOfMove(pieceName, toPos) {
         var piece = this.boardState[toPos.toString()];
         var posVal = Evaluation.posValue(pieceName, toPos);

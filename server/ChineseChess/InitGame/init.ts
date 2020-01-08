@@ -1,8 +1,25 @@
-import { Piece } from '../../Objects/Piece';
+/**
+ * Inicjalizacja gry.
+ */
+
+import {Piece} from '../../Objects/Piece';
 
 export class InitGame {
 
+    /*
+       Figury w grze:
+       j - wieża
+       p - działo
+       m - skoczek
+       x - słoń
+       s - strażnik
+       z - pion
+       k - król
+        */
 
+    /**
+     * Czerwone figury.
+     */
     static getRedPieces() {
         return [
             new Piece('j1', [1, 1]),
@@ -24,6 +41,9 @@ export class InitGame {
         ];
     }
 
+    /**
+     * Czarne figury.
+     */
     static getBlackPieces() {
         return [
             new Piece('j1', [10, 1]),
@@ -44,7 +64,4 @@ export class InitGame {
             new Piece('k', [10, 5])
         ];
     }
-
-
-
 }

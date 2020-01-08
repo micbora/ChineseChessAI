@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core'
-import { FormControl } from '@angular/forms';
+import {Component, OnInit} from '@angular/core'
+import {FormControl} from '@angular/forms';
 
 @Component({
     selector: 'winRater',
@@ -9,6 +9,7 @@ import { FormControl } from '@angular/forms';
 
 
 export class WinRaterComponent implements OnInit {
+    //TODO nasze klasy
     names = [
         'Greedy',
         'Alpha-Beta Pruning',
@@ -16,7 +17,10 @@ export class WinRaterComponent implements OnInit {
         'Temporal Difference Learning',
         'Temporal Difference Learning (Trained)',
         'Monte Carlo Tree Search',
-        'Ultimate (Combined Strategy)'
+        'Ultimate (Combined Strategy)',
+        'Monte Carlo Tree Search - Nasza implementacja',
+        'TD Learning - Nasza implementacja',
+        'TD Trained - Nasza implementacja'
     ]
 
 
@@ -25,17 +29,20 @@ export class WinRaterComponent implements OnInit {
     data_input;
     agent_param;
     humanMode;
+    public chartData: Array<any> = [];
+    public chartLabels: Array<any> = [];
+    teamControl: FormControl = new FormControl();
+
     ngOnInit() {
 
     }
-
-    public chartData: Array<any> = [];
-    public chartLabels: Array<any> = [];
 
     swithTeam() {
         this.team *= -1;
         this.update(this.data_input, this.humanMode, this.agent_param);
     }
+
+    // results: [1|0|-1]
 
     update(r, humanMode, agent_param) {
         if (r.length == 0) {
@@ -53,10 +60,10 @@ export class WinRaterComponent implements OnInit {
         // include draw
         var ave_win_draw = this.process_results_ave(r);
         var accu_win_draw = this.process_results_accu(r);
-        this.chartData[0] = { data: ave_win.concat([0, 1]), label: "Average Winning Rate" };
-        this.chartData[1] = { data: accu_win.concat([0, 1]), label: "Current Wiining Rate" };
-        this.chartData[2] = { data: ave_win_draw.concat([0, 1]), label: "Average Win+Draw Rate" };
-        this.chartData[3] = { data: accu_win_draw.concat([0, 1]), label: "Current Wii+Draw Rate" };
+        this.chartData[0] = {data: ave_win.concat([0, 1]), label: "Average Winning Rate"};
+        this.chartData[1] = {data: accu_win.concat([0, 1]), label: "Current Wiining Rate"};
+        this.chartData[2] = {data: ave_win_draw.concat([0, 1]), label: "Average Win+Draw Rate"};
+        this.chartData[3] = {data: accu_win_draw.concat([0, 1]), label: "Current Wii+Draw Rate"};
         var n = ave_win.length;
         var interval: number = Math.ceil(x.length / this.N);
         // console.log(data)
@@ -68,7 +75,6 @@ export class WinRaterComponent implements OnInit {
         // console.log("labels: ", this.lineChartLabels);
     }
 
-    // results: [1|0|-1]
     // return: [win rate]
     process_results_ave(results) {
         var rate = [];
@@ -83,6 +89,7 @@ export class WinRaterComponent implements OnInit {
         }
         return rate;
     }
+
     process_results_accu(results) {
         var rate = [];
         var interval: number = Math.ceil(results.length / this.N);
@@ -96,8 +103,6 @@ export class WinRaterComponent implements OnInit {
         }
         return rate;
     }
-
-    teamControl: FormControl = new FormControl();
 
     pre_process(arr) {
         if (this.team == 1) return arr;
@@ -114,5 +119,4 @@ export class WinRaterComponent implements OnInit {
         var second = this.team == 1 ? black : red;
         return first + "( vs " + second + " )" + " Win Rate";
     }
-
 }

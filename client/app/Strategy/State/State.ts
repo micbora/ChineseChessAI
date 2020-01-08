@@ -1,3 +1,7 @@
+/**
+ * Stan gry.
+ */
+
 import { Agent } from '../Agent/Agent'
 import { Rule } from '../../ChineseChess/Rule/Rule'
 

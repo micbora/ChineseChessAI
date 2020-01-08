@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+/**
+ * Obsługa strony.
+ */
+
 import { State } from '../Strategy/State/State'
 import { TDLearner } from '../Strategy/TDLearner/TDLearner'
 import { MCTS } from '../Strategy/MCTS/MCTS'
@@ -38,7 +42,7 @@ app.put('/compute/', function(request, response) {
     // console.log("-=-=-=-= Server: Compute get Request Received  -=-=-=-=-=-=-");
     var state = request.body;
     var to_return = {};
-    // console.log(state)
+    console.log(state)
     // console.log(state.blackAgent.pastMoves.length)
     if (state.redAgent.pastMoves.length >= N_MAX_MOVES) {
         console.log("-=-=-=-=-= Draw -=-=-=-=-=-");
@@ -58,11 +62,13 @@ app.put('/compute/', function(request, response) {
     var feature_vec = null;
 
     var playing = state.get_playing_agent();
-    if (playing.check_king_exist() && playing instanceof TDLearner && !state.is_repeating && !(playing instanceof TDLearnerTrained)) {
+    //TODO nasze td
+    if (playing.check_king_exist() && (playing instanceof TDLearner) && !state.is_repeating && !(playing instanceof TDLearnerTrained)) {
         // console.log(playing.weights)
         feature_vec = playing.extract_state_feature(playing, state, playing.oppoAgent);
     }
     response.end(JSON.stringify({ "move": next, "time": t, "state_feature": feature_vec }));
+    // nasze mcts
     var param = (playing instanceof MCTS) ? playing.N_SIMULATION : playing.DEPTH;
     console.log("Agent { ", playing.strategy + "-" + param, "} Compute Move Using: ", t, " ms");
 });

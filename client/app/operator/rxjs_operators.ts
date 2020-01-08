@@ -1,3 +1,7 @@
+/**
+ * Import operatorów.
+ */
+
 // Import just the rxjs statics and operators we need for THIS app.
 
 // Statics

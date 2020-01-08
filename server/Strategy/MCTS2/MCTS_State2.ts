@@ -1,14 +1,14 @@
 /**
- * Stan drzewa MCTS.
+ * Stan drzewa MCTS2.
  */
 import { Agent } from '../Agent/Agent'
 import { State } from '../State/State'
 
-export class MCTS_State {
+export class MCTS_State2 {
     sum_score = 0;
     visits = 0;
-    parent: MCTS_State;
-    children: MCTS_State[];
+    parent: MCTS_State2;
+    children: MCTS_State2[];
     state: State;
 
     EXP_RATE = 12000;
@@ -67,7 +67,7 @@ export class MCTS_State {
             var movePieceName = moves[i][0];
             var move = moves[i][1];
             var nextState = this.state.next_state(movePieceName, move);
-            var child = new MCTS_State(nextState, [playing_agent.getPieceByName(movePieceName), move]);
+            var child = new MCTS_State2(nextState, [playing_agent.getPieceByName(movePieceName), move]);
             child.set_parent(this);
             this.children.push(child);
         }

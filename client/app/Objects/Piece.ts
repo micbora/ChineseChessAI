@@ -1,3 +1,7 @@
+/**
+ * Figura.
+ */
+
 export class Piece {
 
     name: string;
@@ -8,7 +12,10 @@ export class Piece {
         this.position = position;
     }
 
-
+    /**
+     * Zmiana położenia figury.
+     * @param newPos nowa pozycja
+     */
     moveTo(newPos) {
         this.position = newPos;
     }

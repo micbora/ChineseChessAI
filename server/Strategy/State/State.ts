@@ -6,6 +6,9 @@ import { TDLearnerTrained } from '../TDLearner/TDLearnerTrained'
 import { MCTS } from '../MCTS/MCTS'
 import { Reorder } from '../Reorder/Reorder'
 import { Rule } from '../../ChineseChess/Rule/Rule'
+import {MCTS2} from "../MCTS2/MCTS2";
+import {TDLearner2} from "../TDLearner2/TDLearner2";
+import {TDLearnerTrained2} from "../TDLearner2/TDLearnerTrained2";
 
 export class State {
     redAgent: Agent;
@@ -14,9 +17,9 @@ export class State {
 
     is_repeating = false;
 
-    constructor(redAgent: Agent, blacAgent: Agent, playingTeam = 1, updateDict = false) {
+    constructor(redAgent: Agent, blackAgent: Agent, playingTeam = 1, updateDict = false) {
         this.redAgent = redAgent;
-        this.blackAgent = blacAgent;
+        this.blackAgent = blackAgent;
         this.playingTeam = playingTeam;
         this.blackAgent.setOppoAgent(this.redAgent);
         this.redAgent.setOppoAgent(this.blackAgent);
@@ -92,6 +95,9 @@ export class State {
         if (agentDict.strategy == 3) agent = TDLearner.copyFromDict(agentDict);
         if (agentDict.strategy == 4) agent = TDLearnerTrained.copyFromDict(agentDict);
         if (agentDict.strategy == 5) agent = MCTS.copyFromDict(agentDict);
+        if (agentDict.strategy == 10) agent = MCTS2.copyFromDict(agentDict);
+        if (agentDict.strategy == 11) agent = TDLearner2.copyFromDict(agentDict);
+        if (agentDict.strategy == 12) agent = TDLearnerTrained2.copyFromDict(agentDict);
         var new_state;
         if (dict.playingTeam == 1) new_state = new State(agent, oppo, dict.playingTeam);
         else new_state = new State(oppo, agent, dict.playingTeam);

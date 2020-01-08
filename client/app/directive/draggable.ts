@@ -1,3 +1,7 @@
+/**
+ * Obsługa myszy.
+ */
+
 import {ElementRef, Directive, EventEmitter, HostListener} from '@angular/core';
 
 

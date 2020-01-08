@@ -1,4 +1,6 @@
-
+/**
+ * Agent realizujący ABPruning.
+ */
 import { Agent } from '../Agent/Agent'
 import { State } from '../State/State'
 import { Evaluation } from '../_Param/Evaluation'

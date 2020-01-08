@@ -1,3 +1,7 @@
+/**
+ * Fake'owa figura.
+ */
+
 import { Piece } from './Piece'
 
 export class DummyPiece extends Piece {

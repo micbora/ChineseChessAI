@@ -1,12 +1,22 @@
-import { Piece } from '../../Objects/Piece';
+/**
+ * Zasady gry.
+ */
+import {Piece} from '../../Objects/Piece';
 
 export class Rule {
+    //wielkość planszy
     static minRow = 1;
     static maxRow = 10;
     static minCol = 1;
     static maxCol = 9;
 
-
+    /**
+     * Czy jest figura w kolumnie.
+     * @param col nr kolumny
+     * @param minRow początek planszy
+     * @param maxRow koniec planszy
+     * @param boardStates bieżący stan planszy
+     */
     static hasPieceOnRows(col, minRow, maxRow, boardStates: {}) {
         for (var i = minRow; i <= maxRow; i++) {
             if (boardStates[[i, col].toString()]) return true;
@@ -14,6 +24,13 @@ export class Rule {
         return false;
     }
 
+    /**
+     * Ilość figur w kolumnie.
+     * @param col kolumna
+     * @param minRow początek planszy
+     * @param maxRow koniec planszy
+     * @param boardStates stan planszy
+     */
     static numPieceOnRows(col, minRow, maxRow, boardStates) {
         var r = 0;
         for (var i = minRow; i <= maxRow; i++) {
@@ -23,7 +40,13 @@ export class Rule {
     }
 
 
-
+    /**
+     * Możliwe ruchy i drogi ucieczki własnej drużyny.
+     * @param currRow wierz
+     * @param currCol kolumna
+     * @param moves lista możliwych ruchów
+     * @param boardStates stan planszy
+     */
     // return moves within board range and escape positions occupied by own team
     // boardStates: {posStr->[name, isMyPiece]}
     static filterBoundedMoves(currRow, currCol, moves, boardStates) {
@@ -38,7 +61,12 @@ export class Rule {
         ))
     }
 
-
+    /**
+     * Wyznacza możliwe ruchy w linii.
+     * @param currRow wierz
+     * @param currCol kolumna
+     * @param boardStates stan planszy
+     */
     static movesOnSameLine(currRow, currCol, boardStates) {
         var moves = [];
         for (var i = currRow + 1; i <= this.maxRow; i++) {
@@ -76,11 +104,23 @@ export class Rule {
         return moves;
     }
 
+    /**
+     * Możliwe ruchy wieży.
+     * @param currRow wierz
+     * @param currCol kolumna
+     * @param boardStates stan planszy
+     */
     // Ju
     static possibleMovesForJu(currRow, currCol, boardStates) {
         return this.movesOnSameLine(currRow, currCol, boardStates);
     }
 
+    /**
+     * Możliwe ruchy skoczka.
+     * @param currRow wierz
+     * @param currCol kolumna
+     * @param boardStates stan planszy
+     */
     // Ma
     static possibleMovesForMa(currRow, currCol, boardStates) {
         var moves = [];
@@ -104,7 +144,14 @@ export class Rule {
     }
 
 
-
+    /**
+     * Wyszukuje pierwszego przeciwnika w wierszu.
+     * @param row wiersz
+     * @param startCol początkowa kolumna
+     * @param states stany
+     * @param team zespół
+     * @param incFn funkcja posunięcia
+     */
     static findFirstOpponentOnRow(row, startCol, states, team, incFn) {
         while (startCol >= this.minCol && startCol <= this.maxCol) {
             var k = [row, startCol].toString();
@@ -115,6 +162,15 @@ export class Rule {
             startCol = incFn(startCol);
         }
     }
+
+    /**
+     * Wyszukuje przeciwnika w kolumnie.
+     * @param col kolumna
+     * @param startRow początkowy wiersz
+     * @param states stany
+     * @param team zespół
+     * @param incFn funkcja posunięcia
+     */
     static findFirstOpponentOnCol(col, startRow, states, team, incFn) {
         while (startRow >= this.minRow && startRow <= this.maxRow) {
             var k = [startRow, col].toString();
@@ -126,7 +182,13 @@ export class Rule {
         }
     }
 
-
+    /**
+     * Możliwe ruchy działa.
+     * @param currRow wierz
+     * @param currCol kolumna
+     * @param boardStates stan planszy
+     * @param team zespół
+     */
     // Pao
     static possibleMovesForPao(currRow, currCol, boardStates, team) {
         var inc = (x => x + 1);
@@ -171,6 +233,13 @@ export class Rule {
         return moves;
     }
 
+    /**
+     * Możliwe ruchy strażnika.
+     * @param currRow wierz
+     * @param currCol kolumna
+     * @param boardStates stan planszy
+     * @param isLowerTeam czy jest zespołem niższym
+     */
     // Shi
     static possibleMovesForShi(currRow, currCol, boardStates, isLowerTeam) {
         var moves = [];
@@ -187,19 +256,31 @@ export class Rule {
         return moves;
     }
 
+    /**
+     * Możliwe ruchy króla.
+     * @param currRow wierz
+     * @param currCol kolumna
+     * @param boardStates stan planszy
+     */
     // King
     static possibleMovesForKing(currRow, currCol, boardStates) {
         var moves = [];
-        for (var col = 4; col <= 6; col++)  moves.push([currRow, col]);
+        for (var col = 4; col <= 6; col++) moves.push([currRow, col]);
         if (currRow < 5) {
             for (var row = 1; row <= 3; row++) moves.push([row, currCol]);
-        }
-        else {
+        } else {
             for (var row = 8; row <= 10; row++) moves.push([row, currCol]);
         }
         return moves.filter(x => ((x[0] - currRow) * (x[0] - currRow) + (x[1] - currCol) * (x[1] - currCol)) < 2);
     }
 
+    /**
+     * Możliwe ruchy słonia.
+     * @param currRow wierz
+     * @param currCol kolumna
+     * @param boardStates stan planszy
+     * @param isLowerTeam czy jest to niższy zespół
+     */
     // Xiang
     static possibleMovesForXiang(currRow, currCol, boardStates, isLowerTeam) {
         var moves = [];
@@ -212,6 +293,13 @@ export class Rule {
         return moves;
     }
 
+    /**
+     * Możliwe ruchy piona.
+     * @param currRow wierz
+     * @param currCol kolumna
+     * @param boardStates stan planszy
+     * @param isLowerTeam czy jest to niższy zespół
+     */
     // Zu
     static possibleMovesForZu(currRow, currCol, boardStates, isLowerTeam) {
         var beyond = isLowerTeam ? (currRow > 5) : (currRow <= 5); //beyond the river
@@ -224,11 +312,16 @@ export class Rule {
     }
 
 
-
-    // all legal moves for a piece in a board state
-    // boardStates: {posStr->[name, isMyPiece]}
-    // return [(row, col)]
-    static possibleMoves = function(piece: Piece, boardStates: {}, isLowerTeam) {
+    /**
+     * Zwraca wszystkie możliwe ruchy.
+     * @param piece figura
+     * @param boardStates stan planszy
+     * @param isLowerTeam czy jest to niższy zespół
+     */
+        // all legal moves for a piece in a board state
+        // boardStates: {posStr->[name, isMyPiece]}
+        // return [(row, col)]
+    static possibleMoves = function (piece: Piece, boardStates: {}, isLowerTeam) {
         var name = piece.name[0];
         var currRow = piece.position[0];
         var currCol = piece.position[1];
@@ -237,22 +330,22 @@ export class Rule {
         switch (name) {
             case 'j':
                 moves = this.possibleMovesForJu(currRow, currCol, boardStates);
-                break
+                break;
             case 'm':
                 moves = this.possibleMovesForMa(currRow, currCol, boardStates);
-                break
+                break;
             case 'x':
                 moves = this.possibleMovesForXiang(currRow, currCol, boardStates, isLowerTeam);
-                break
+                break;
             case 's':
                 moves = this.possibleMovesForShi(currRow, currCol, boardStates, isLowerTeam);
-                break
+                break;
             case 'k':
                 moves = this.possibleMovesForKing(currRow, currCol, boardStates);
-                break
+                break;
             case 'p':
                 moves = this.possibleMovesForPao(currRow, currCol, boardStates);
-                break
+                break;
             case 'z':
                 moves = this.possibleMovesForZu(currRow, currCol, boardStates, isLowerTeam);
                 break
@@ -260,11 +353,11 @@ export class Rule {
         // console.log(piece.name, moves);
         moves = this.filterBoundedMoves(currRow, currCol, moves, boardStates);
         return moves;
-    }
+    };
 
     // return a list of all possible moves
     // boardStates: {posStr->[name, isMyPiece]}
-    static allPossibleMoves = function(myPieces: Piece[], boardStates: {}, team) {
+    static allPossibleMoves = function (myPieces: Piece[], boardStates: {}, team) {
         var moves = {};
         // team is in the lower part of the river
         var isLowerTeam = (team == 1);
@@ -272,11 +365,10 @@ export class Rule {
             var piece = myPieces[i];
             var moves4Piece = this.possibleMoves(piece, boardStates, isLowerTeam);
             // console.log("moves4Piece", piece.name, moves4Piece)
-            // if (!moves4Piece || moves4Piece.length == 0) continue;
             moves[piece.name] = moves4Piece;
         }
         return moves;
-    }
+    };
 
 
     // @param: return
@@ -284,15 +376,15 @@ export class Rule {
     // 1: Win
     // -1: Lase
     // {posStr->[name, isMyPiece]}
-    static getGameEndState = function(agent) {
+    static getGameEndState = function (agent) {
         var myPieces: Piece[] = agent.myPieces;
         var oppoPieces: Piece[] = agent.oppoPieces;
         var boardState = agent.boardState;
         return this.getGameEndStateByState(myPieces, oppoPieces, boardState, agent.team)
 
-    }
+    };
 
-    static getGameEndStateByState = function(myPieces: Piece[], oppoPieces: Piece[], boardState, team) {
+    static getGameEndStateByState = function (myPieces: Piece[], oppoPieces: Piece[], boardState, team) {
         var myKing = myPieces.filter(x => x.name == 'k')[0];
         var oppoKing = oppoPieces.filter(x => x.name == 'k')[0];
         if (!myKing) return -1;
