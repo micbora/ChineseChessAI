@@ -21,79 +21,23 @@ export class MCTS2 extends Agent {
 
     // return [piece:Piece, toPos];
     comptuteNextMove(state) {
-        var root = new MCTS_State2(state, null);
-        // console.log("root:", root.visits);
-        var i_simulation = 1;
-        while (i_simulation <= this.N_SIMULATION) {
-            // console.log("======================", i_simulation, "======================")
-            i_simulation += 1;
-            var seleted_state: MCTS_State2 = this.select(root);
-            var simulated_state = this.simulate(root, seleted_state);
-            if (simulated_state) this.back_propagate(simulated_state);
-        }
-        var r = this.pick_max_UCB_child(root).parentMove;
-        // console.log("======================MOVE: ", r, "======================")
-        return r;
+        /*
+            1. kopiujemy bieżący stan planszy
+            2. w każdej symulacji
+                a) losowy wybór figury
+                b) określenie możliwych ruchów
+                c) wybór:
+                    i. kończącego grę
+                    ii. ratującego grę
+                    iii. losowego
+                    iv. lub zbijającego najwyższą figurę ewentualnie
+                    v. inna wybrana polityka
+                d) przeprowadzenie dalszej symulacji losowo/zachłannie i podliczenie zwycięstw po każdej rozgrywce
+                e) wybór "najlepszego" ruchu
+         */
+
+        var root = new MCTS_State2(state, this.N_SIMULATION);
+        root.simulate();
+        return root.getBestMove();
     }
-
-    // select one child node to simulate
-    // return null if end state
-    select(mcts_state: MCTS_State2) {
-        // not visited before, need to generate child ndoes
-        if (mcts_state.parent && mcts_state.visits == 0) {
-            mcts_state.visits = 1;
-            return mcts_state;
-        }
-        if (!mcts_state.children) mcts_state.generate_children();
-        var unvisited = mcts_state.children.filter(x => x.visits == 0);
-        if (unvisited.length > 0) return unvisited[0];
-        var selected = this.pick_max_UCB_child(mcts_state);
-        if (selected) return this.select(selected);
-        else return mcts_state;
-    }
-
-    pick_max_UCB_child(mcts_state: MCTS_State2) {
-        var selected: MCTS_State2 = null;
-        var max_value = -Infinity;
-        for (var i in mcts_state.children) {
-            var child = mcts_state.children[i];
-            var v = child.UCB_valule();
-            // console.log("ucb value:", v)
-            if (v > max_value) {
-                max_value = v;
-                selected = child;
-            }
-        }
-        return selected;
-    }
-
-    simulate(root_state: MCTS_State2, selected: MCTS_State2) {
-        var move = selected.state.get_playing_agent().updateState().greedy_move();
-        if (move.length == 0) return null;
-        var nextState = selected.state.next_state(move[0].name, move[1]);
-        var mcts_new_state = new MCTS_State2(nextState, move);
-        mcts_new_state.visits += 1;
-        mcts_new_state.set_parent(selected);
-        mcts_new_state.sum_score += (mcts_new_state.state.redAgent.getValueOfState(mcts_new_state.state)) * root_state.state.playingTeam;
-        return mcts_new_state;
-    }
-
-    back_propagate(simulated_state: MCTS_State2) {
-        var temp = simulated_state;
-        var added_score = simulated_state.sum_score;
-        while (temp.parent) {
-            temp.parent.visits += 1;
-            temp.parent.sum_score += added_score;
-            temp = temp.parent;
-        }
-    }
-
-
-
-
-
-
-
-
-
 }

@@ -1,3 +1,6 @@
+//https://www.researchgate.net/publication/220194771_Reinforcement_learning_for_training_a_computer_program_of_Chinese_chess
+//https://www.researchgate.net/publication/221049395_Temporal_Difference_Learning_in_Chinese_Chess
+
 
 import { Agent } from '../Agent/Agent'
 import { State } from '../State/State'

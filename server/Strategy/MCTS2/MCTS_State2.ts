@@ -1,75 +1,115 @@
 /**
- * Stan drzewa MCTS2.
+ * Symulacja zagrania tury przez gracza grającego polityką MCTS2.
  */
-import { Agent } from '../Agent/Agent'
-import { State } from '../State/State'
+import {State} from '../State/State'
+import {Piece} from "../../Objects/Piece";
+import {Agent} from "../Agent/Agent";
 
 export class MCTS_State2 {
-    sum_score = 0;
-    visits = 0;
-    parent: MCTS_State2;
-    children: MCTS_State2[];
-    state: State;
 
-    EXP_RATE = 12000;
-    // EXP_RATE = 10000000;
-    // [piece:Piece, toPos];
-    parentMove;
+    private startState: State;
+    private sims: number;
 
-    constructor(state, move) { this.state = state; this.parentMove = move; }
-    get_ave_score() {
-        return this.sum_score / this.visits;
+    //mapa rezultatów - kluczem jest przesunięcie figury w nowe miejsce, a wartością - liczba zwycięstw i zagrań
+    private result: Map<[Piece, [number, number]], [number, number]>;
+
+    private SAFE_BORDER = 1000;
+
+
+    /**
+     * Konstruktor.
+     * @param startState stan startowy
+     * @param sims liczba symulacji
+     */
+    constructor(startState: State, sims: number) {
+        this.startState = startState.copy();
+        this.sims = sims;
+        this.result = new Map<[Piece, [number, number]], [number, number]>();
     }
 
-    UCB_valule() {
-        var n = this.parent.visits;
-        var visits = this.visits;
-        var ave = this.get_ave_score();
-        // console.log("ave:", ave)
-        // console.log("visits:", visits)
-        // console.log("n:", n)
-        // console.log("Math.sqrt(2 * Math.log(n) / visits):", Math.sqrt(2 * Math.log(n) / visits))
-        return ave + Math.sqrt(this.EXP_RATE * Math.log(n) / visits);
-    }
+    /**
+     * Przeprowadza określoną liczbę symulacji startując z wyznaczonego stanu.
+     */
+    simulate() {
+        var currentPlayer = this.startState.get_playing_agent();
+        currentPlayer.updateState();
+        currentPlayer.computeLegalMoves();
+        for (let i = 0; i < this.sims; ++i) {
+            console.log(currentPlayer.legalMoves);
+            var possiblePiecesLen = Object.keys(currentPlayer.legalMoves).length;
+            var chosenPieceIndex = Math.floor(Math.random() * (possiblePiecesLen + 1));
+            var pieceKey = Object.keys(currentPlayer.legalMoves)[chosenPieceIndex];
+            var possibleMoves = currentPlayer.legalMoves[pieceKey];
+            var chosenPiece = currentPlayer.getPieceByName(pieceKey);
 
-    depth() {
-        var r = 0;
-        var temp = this.parent;
-        while (temp) {
-            temp = temp.parent;
-            r += 1;
+            var possibleMovesLen = Object.keys(possibleMoves).length;
+            var chosenMoveIndex = Math.floor(Math.random() * (possibleMovesLen + 1));
+            var moveKey = Object.keys(possibleMoves)[chosenMoveIndex];
+            var chosenMove = possibleMoves[moveKey];
+
+            // rozważyć inne symulacje
+            var res = this.greedy_simulation(chosenPiece, chosenMove);
+
+            if(this.result.has([chosenPiece, chosenMove])) {
+               var cur = this.result.get([chosenPiece, chosenMove])
+               cur[1]++;
+               if (res > 0) {
+                   cur[0]++;
+               }
+               this.result.set([chosenPiece, chosenMove], cur);
+            } else {
+                this.result.set([chosenPiece, chosenMove], [ res > 0 ? 1 : 0, 1]);
+            }
+
+            console.log(i);
         }
-        return r;
     }
 
+    /**
+     * Symulacja opierająca się o zachłanną symulację.
+     * @param chosenPiece wybrana figura
+     * @param chosenMove wybrany ruch
+     */
+    private greedy_simulation(chosenPiece : Piece, chosenMove : [number, number]) : number {
+        // console.log(chosenPiece);
+        // console.log(chosenMove);
+        var state = this.startState.copy();
+        var mainTeam = state.playingTeam;
+        var iter = 0;
 
-    add_score(x) { this.sum_score += x; }
-    add_visit() { this.visits += 1; }
+        state.get_playing_agent().movePieceTo(chosenPiece, chosenMove);
 
-    set_parent(x) { this.parent = x; }
-
-    generate_children() {
-        this.children = [];
-        var playing_agent = this.state.get_playing_agent();
-        playing_agent.updateBoardState();
-        // var endState = this.state.getEndState();
-        // if (endState != 0) {
-        //     var depth = this.depth();
-        //     var sameAsRoot = (depth % 2 == 0 ? 1 : -1);
-        //     this.sum_score = sameAsRoot * this.state.playingTeam * endState * Infinity;
-        //     console.log("END: ", this.sum_score)
-        //     return;
-        // }
-        playing_agent.computeLegalMoves();
-        var moves = playing_agent.get_moves_arr();
-        // console.log(moves, moves.length)
-        for (var i in moves) {
-            var movePieceName = moves[i][0];
-            var move = moves[i][1];
-            var nextState = this.state.next_state(movePieceName, move);
-            var child = new MCTS_State2(nextState, [playing_agent.getPieceByName(movePieceName), move]);
-            child.set_parent(this);
-            this.children.push(child);
+        while(state.getEndState() == 0) {
+            state.switchTurn();
+            state.get_playing_agent().greedy_move();
+            if (iter >= this.SAFE_BORDER) {
+                break;
+            }
+            ++iter;
         }
+
+        if (state.playingTeam == mainTeam) {
+            return state.getEndState();
+        } else {
+            return -state.getEndState();
+        }
+    }
+
+    public getBestMove() : [Piece, [number, number]] {
+        var curBest = -1;
+        var piece;
+        var move;
+
+        for (let x in this.result.keys()) {
+            var curObj = this.result.get(x);
+            var curVal = curObj[0]/curObj[1];
+            if (curVal > curBest) {
+                curBest = curVal;
+                piece = x[0];
+                move = x[1];
+            }
+        }
+        return [piece, move]
+
     }
 }

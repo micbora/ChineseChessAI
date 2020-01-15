@@ -63,14 +63,14 @@ export class State {
         var moves = agent.pastMoves;
         var n = moves.length;
         if (n < 10) return false;
-        if (this.samveMove(moves[n - 1], moves[n - 3]) && this.samveMove(moves[n - 5], moves[n - 3])) {
+        if (this.saveMove(moves[n - 1], moves[n - 3]) && this.saveMove(moves[n - 5], moves[n - 3])) {
             console.log(moves)
             return true;
         };
         return false;
     }
 
-    static samveMove(move1, move2) {
+    static saveMove(move1, move2) {
         return move1.name == move2.name && (move1.position.toString() == move2.position.toString());
     }
 
