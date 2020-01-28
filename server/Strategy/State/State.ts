@@ -31,6 +31,7 @@ export class State {
     // return | 1:win | -1:lose | 0:continue for playing team
     getEndState() {
         var playing = this.get_playing_agent();
+        playing.updateBoardState();
         var endState = Rule.getGameEndState(playing);
         return endState;
     }
@@ -47,7 +48,7 @@ export class State {
         var nextState = this.copy();
         nextState.switchTurn();
         var agent = nextState.get_playing_agent().oppoAgent;
-        // console.log(agent)
+        // console.log(agent);
         // console.log("movePieceName", movePieceName)
         agent.movePieceTo(agent.getPieceByName(movePieceName), toPos);
         return nextState;
@@ -64,9 +65,9 @@ export class State {
         var n = moves.length;
         if (n < 10) return false;
         if (this.saveMove(moves[n - 1], moves[n - 3]) && this.saveMove(moves[n - 5], moves[n - 3])) {
-            console.log(moves)
+            console.log(moves);
             return true;
-        };
+        }
         return false;
     }
 
@@ -106,7 +107,6 @@ export class State {
     }
 
 
-
     nextMove() {
         var agent = this.get_playing_agent();
         var r = null;
@@ -117,7 +117,9 @@ export class State {
                 agent.updateState();
                 r = agent.random_move();
             }
-        } else console.log("-=-=-=-=-=- KING DIED -=-=-=-=-=-", r)
+        } else {
+            //console.log("-=-=-=-=-=- KING DIED -=-=-=-=-=-", r)
+        }
         return r;
     }
 

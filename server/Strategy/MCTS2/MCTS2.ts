@@ -22,6 +22,7 @@ export class MCTS2 extends Agent {
     // return [piece:Piece, toPos];
     comptuteNextMove(state) {
         /*
+
             1. kopiujemy bieżący stan planszy
             2. w każdej symulacji
                 a) losowy wybór figury
@@ -39,5 +40,12 @@ export class MCTS2 extends Agent {
         var root = new MCTS_State2(state, this.N_SIMULATION);
         root.simulate();
         return root.getBestMove();
+    }
+
+
+    copy(): Agent {
+        var cp = super.copy();
+        cp.strategy = this.strategy;
+        return cp;
     }
 }

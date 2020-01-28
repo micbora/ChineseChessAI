@@ -49,8 +49,17 @@ export class Agent {
     // update board state by pieces
     updateBoardState() {
         var state = {};
-        for (var i in this.myPieces) state[this.myPieces[i].position.toString()] = [this.myPieces[i].name, true];
-        for (var i in this.oppoPieces) state[this.oppoPieces[i].position.toString()] = [this.oppoPieces[i].name, false];
+        for (var i in this.myPieces) {
+            if (typeof this.myPieces[i].position !== "undefined") {
+                state[this.myPieces[i].position.toString()] = [this.myPieces[i].name, true];
+            }
+        }
+        for (var i in this.oppoPieces)
+        {
+            if (typeof this.oppoPieces[i].position !== "undefined") {
+                state[this.oppoPieces[i].position.toString()] = [this.oppoPieces[i].name, false];
+            }
+        }
         this.boardState = state;
     }
 
@@ -100,6 +109,7 @@ export class Agent {
 
     random_move() {
         // console.log("this.legalMoves:", this.legalMoves)
+        this.updateState();
         var movablePieces = Object.keys(this.legalMoves);
         if (movablePieces.length == 0) return [];
         var name = movablePieces[Math.floor(movablePieces.length * Math.random())];
@@ -142,7 +152,11 @@ export class Agent {
 
 
 
-    copy() { return new Agent(this.team, this.myPieces.map(x => x.copy())); }
+    copy() {
+        let ag = new Agent(this.team, this.myPieces.map(x => x.copy()));
+        ag.strategy = this.strategy;
+        return ag;
+    }
 
     static piecesFromDict(dict_list) {
         return dict_list.map(x => Piece.copyFromDict(x));

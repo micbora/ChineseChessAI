@@ -322,6 +322,9 @@ export class Rule {
         // boardStates: {posStr->[name, isMyPiece]}
         // return [(row, col)]
     static possibleMoves = function (piece: Piece, boardStates: {}, isLowerTeam) {
+        if (typeof piece.position === "undefined") {
+            return [];
+        }
         var name = piece.name[0];
         var currRow = piece.position[0];
         var currCol = piece.position[1];
@@ -359,6 +362,9 @@ export class Rule {
     // boardStates: {posStr->[name, isMyPiece]}
     static allPossibleMoves = function (myPieces: Piece[], boardStates: {}, team) {
         var moves = {};
+        if (typeof myPieces === "undefined" || typeof boardStates === "undefined") {
+            return moves;
+        }
         // team is in the lower part of the river
         var isLowerTeam = (team == 1);
         for (var i in myPieces) {
@@ -380,6 +386,7 @@ export class Rule {
         var myPieces: Piece[] = agent.myPieces;
         var oppoPieces: Piece[] = agent.oppoPieces;
         var boardState = agent.boardState;
+        // console.log(agent.boardState);
         return this.getGameEndStateByState(myPieces, oppoPieces, boardState, agent.team)
 
     };
@@ -387,8 +394,8 @@ export class Rule {
     static getGameEndStateByState = function (myPieces: Piece[], oppoPieces: Piece[], boardState, team) {
         var myKing = myPieces.filter(x => x.name == 'k')[0];
         var oppoKing = oppoPieces.filter(x => x.name == 'k')[0];
-        if (!myKing) return -1;
-        if (!oppoKing) return 1;
+        if (!myKing || typeof myKing.position === "undefined") return -1;
+        if (!oppoKing  || typeof oppoKing.position === "undefined") return 1;
         var myKingCol = myKing.position[1];
         // not on the same col
         if (myKingCol != oppoKing.position[1]) return 0;

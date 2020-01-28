@@ -31,24 +31,32 @@ export class MCTS_State2 {
      * Przeprowadza określoną liczbę symulacji startując z wyznaczonego stanu.
      */
     simulate() {
-        var currentPlayer = this.startState.get_playing_agent();
-        currentPlayer.updateState();
-        currentPlayer.computeLegalMoves();
         for (let i = 0; i < this.sims; ++i) {
-            console.log(currentPlayer.legalMoves);
+            var st = this.startState.copy();
+            var currentPlayer = st.get_playing_agent();
+            currentPlayer.updateState();
+            currentPlayer.computeLegalMoves();
+    //        console.log(currentPlayer.legalMoves);
             var possiblePiecesLen = Object.keys(currentPlayer.legalMoves).length;
             var chosenPieceIndex = Math.floor(Math.random() * (possiblePiecesLen + 1));
+            if (chosenPieceIndex >= possiblePiecesLen) {
+                chosenPieceIndex = possiblePiecesLen -1;
+            }
             var pieceKey = Object.keys(currentPlayer.legalMoves)[chosenPieceIndex];
             var possibleMoves = currentPlayer.legalMoves[pieceKey];
             var chosenPiece = currentPlayer.getPieceByName(pieceKey);
 
             var possibleMovesLen = Object.keys(possibleMoves).length;
             var chosenMoveIndex = Math.floor(Math.random() * (possibleMovesLen + 1));
+            if (chosenMoveIndex >= possibleMovesLen) {
+                chosenMoveIndex = possibleMovesLen -1;
+            }
             var moveKey = Object.keys(possibleMoves)[chosenMoveIndex];
             var chosenMove = possibleMoves[moveKey];
 
             // rozważyć inne symulacje
-            var res = this.greedy_simulation(chosenPiece, chosenMove);
+            currentPlayer.updateState();
+            var res = this.greedy_simulation(st, chosenPiece, chosenMove);
 
             if(this.result.has([chosenPiece, chosenMove])) {
                var cur = this.result.get([chosenPiece, chosenMove])
@@ -67,13 +75,14 @@ export class MCTS_State2 {
 
     /**
      * Symulacja opierająca się o zachłanną symulację.
+     * @param st
      * @param chosenPiece wybrana figura
      * @param chosenMove wybrany ruch
      */
-    private greedy_simulation(chosenPiece : Piece, chosenMove : [number, number]) : number {
+    private greedy_simulation(st:State, chosenPiece : Piece, chosenMove : [number, number]) : number {
         // console.log(chosenPiece);
         // console.log(chosenMove);
-        var state = this.startState.copy();
+        var state = st;
         var mainTeam = state.playingTeam;
         var iter = 0;
 
@@ -81,7 +90,12 @@ export class MCTS_State2 {
 
         while(state.getEndState() == 0) {
             state.switchTurn();
-            state.get_playing_agent().greedy_move();
+            if (Math.random() <= 0.55) {
+            state.get_playing_agent().random_move();
+            } else {
+                state.get_playing_agent().greedy_move();
+            }
+
             if (iter >= this.SAFE_BORDER) {
                 break;
             }
@@ -100,14 +114,17 @@ export class MCTS_State2 {
         var piece;
         var move;
 
-        for (let x in this.result.keys()) {
-            var curObj = this.result.get(x);
+        let k = this.result.keys();
+        var res = k.next();
+        while(!res.done) {
+            var curObj = this.result.get(res.value);
             var curVal = curObj[0]/curObj[1];
             if (curVal > curBest) {
                 curBest = curVal;
-                piece = x[0];
-                move = x[1];
+                piece = res.value[0];
+                move = res.value[1];
             }
+            res = k.next();
         }
         return [piece, move]
 
