@@ -6,8 +6,10 @@
 
 import { State } from '../Strategy/State/State'
 import { TDLearner } from '../Strategy/TDLearner/TDLearner'
+import { TDLearner2 } from '../Strategy/TDLearner2/TDLearner2'
 import { MCTS } from '../Strategy/MCTS/MCTS'
 import { TDLearnerTrained } from '../Strategy/TDLearner/TDLearnerTrained'
+import { TDLearnerTrained2 } from '../Strategy/TDLearner2/TDLearnerTrained2'
 // import { Agent } from '../Strategy/Agent/Agent'
 // import { GreedyAgent } from '../Strategy/Greedy/GreedyAgent'
 // import { EvalFnAgent } from '../Strategy/EvalFn/EvaluationFn'
@@ -64,6 +66,10 @@ app.put('/compute/', function(request, response) {
     var playing = state.get_playing_agent();
     //TODO nasze td
     if (playing.check_king_exist() && (playing instanceof TDLearner) && !state.is_repeating && !(playing instanceof TDLearnerTrained)) {
+        // console.log(playing.weights)
+        feature_vec = playing.extract_state_feature(playing, state, playing.oppoAgent);
+    }
+    else if (playing.check_king_exist() && (playing instanceof TDLearner2) && !state.is_repeating && !(playing instanceof TDLearnerTrained2)) {
         // console.log(playing.weights)
         feature_vec = playing.extract_state_feature(playing, state, playing.oppoAgent);
     }

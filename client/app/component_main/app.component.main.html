@@ -9,7 +9,7 @@
 </div>
 
 <div class="body_content" (keyup.Enter)="board.initGame()">
-	<board #board class="board" (onResultsUpdated)="update_result(board.results, board.humanMode, [board.redAgentType, board.redAgentDepth, board.blackAgentType, board.blackAgentDepth])" (onTimeUpdated)="update_runtime(board.runtime_dict)" (onWeightUpdated)="update_weight(board.state.redAgent.strategy==3? board.weigths_1: undefined, board.state.blackAgent.strategy==3? board.weigths_2:undefined)"
+	<board #board class="board" (onResultsUpdated)="update_result(board.results, board.humanMode, [board.redAgentType, board.redAgentDepth, board.blackAgentType, board.blackAgentDepth])" (onTimeUpdated)="update_runtime(board.runtime_dict)" (onWeightUpdated)="update_weight((board.state.redAgent.strategy==3 || board.state.redAgent.strategy==7)? board.weigths_1: undefined, (board.state.blackAgent.strategy==3 || board.state.blackAgent.strategy==7) ? board.weigths_2:undefined)"
 					(onClear)="clear()"></board>
 
 	<div class="left">
@@ -50,10 +50,9 @@
 						<option>3-TDLeaner</option>
 						<option>4-TDLearn(Trained)</option>
 						<option>5-MCTS</option>
-						<option>6-Ultimate</option>
-						<option>10-NaszMCTS</option>
-						<option>11-NaszTDLeaner</option>
-						<option>12-NaszTDLearn(Trained)</option>
+						<option>7-NaszMCTS</option>
+						<option>8-NaszTDLeaner</option>
+						<option>9-NaszTDLearn(Trained)</option>
 					</sm-select>
 
 				</div>
@@ -87,10 +86,9 @@
 				<option>3-TDLeaner</option>
 				<option>4-TDLean(Trained)</option>
 				<option>5-MCTS</option>
-				<option>6-Ultimate</option>
-				<option>10-NaszMCTS</option>
-				<option>11-NaszTDLeaner</option>
-				<option>12-NaszTDLearn(Trained)</option>
+				<option>7-NaszMCTS</option>
+				<option>8-NaszTDLeaner</option>
+				<option>9-NaszTDLearn(Trained)</option>
 			</sm-select>
 			<div class=" margin "></div>
 			<sm-select class="fluid" *ngIf="board.blackAgentType>0 && board.blackAgentType!=5" placeholder="Depth (2)" (change)="board.chooseBlackAgentDepth($event.target.value) ">

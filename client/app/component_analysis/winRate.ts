@@ -17,7 +17,6 @@ export class WinRaterComponent implements OnInit {
         'Temporal Difference Learning',
         'Temporal Difference Learning (Trained)',
         'Monte Carlo Tree Search',
-        'Ultimate (Combined Strategy)',
         'Monte Carlo Tree Search - Nasza implementacja',
         'TD Learning - Nasza implementacja',
         'TD Trained - Nasza implementacja'

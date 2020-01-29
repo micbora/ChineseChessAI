@@ -60,7 +60,7 @@ export class TDLearner extends EvalFnAgent {
             // this.weights[i] += eta * (this.squash(gradient[i], this.weights[i]+1) - this.weights[i]);
             this.weights[i] = Math.min(Math.max(this.weights[i], 0), 20);
         }
-        console.log("UPDATED WEIGHT:", this.weights)
+        // console.log("UPDATED WEIGHT:", this.weights)
         return this.weights;
     }
 

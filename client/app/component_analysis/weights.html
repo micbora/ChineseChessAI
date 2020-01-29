@@ -2,7 +2,7 @@
 
 
     <h3 class="ui horizontal divider header">
-  <i class="Align Right icon"></i> Red: TDLearner (Depth {{depth1}}) Weight Tuning</h3>
+  <i class="Align Right icon"></i> Red: TDLearner (Albo własna) (Depth {{depth1}}) Weight Tuning</h3>
     <sm-segment class="raised">
         <table class="ui sortable celled table">
             <thead>
@@ -18,7 +18,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let w of weight_record_1">
-                    <td *ngFor="let e of w">{{e.toFixed(2)}}</td>
+                    <td *ngFor="let e of w">{{e.toFixed(3)}}</td>
                 </tr>
             </tbody>
         </table>
@@ -30,7 +30,7 @@
 
 
     <h3 class="ui horizontal divider header">
-  <i class="Align Right icon"></i> Black: TDLearner (Depth {{depth2}}) Weight Tuning</h3>
+  <i class="Align Right icon"></i> Black: TDLearner (Albo własna) (Depth {{depth2}}) Weight Tuning</h3>
     <sm-segment class="raised">
         <table class="ui sortable celled table">
             <thead>
@@ -46,7 +46,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let w of weight_record_2">
-                    <td *ngFor="let e of w">{{e.toFixed(1)}}</td>
+                    <td *ngFor="let e of w">{{e.toFixed(3)}}</td>
                 </tr>
             </tbody>
         </table>

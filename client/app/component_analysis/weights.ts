@@ -12,7 +12,7 @@ export class WeightTableComponent {
 
     weight_record_1 = []; // [[weight]]
     weight_record_2 = []; // [[weight]]
-    N = 3;
+    N = 10;
     @Input() depth1;
     @Input() depth2;
 

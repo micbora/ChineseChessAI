@@ -134,7 +134,7 @@ export class BoardComponent implements OnInit {
         this.onClear.emit();
         this.simulation_state = -1;
         this.redAgentType = this.parse_agentType(desc);
-
+        console.log("Red agent type :", this.redAgentType);
     }
 
     /**
@@ -145,6 +145,7 @@ export class BoardComponent implements OnInit {
         this.onClear.emit();
         this.simulation_state = -1;
         this.blackAgentType = this.parse_agentType(desc);
+        console.log("Black agent type :", this.blackAgentType);
         this.clear_results();
         if (this.humanMode) this.initGame();
     }
@@ -220,10 +221,9 @@ export class BoardComponent implements OnInit {
             case 4: { redAgent = new TDLearnerTrained(this.redTeam, this.redAgentDepth); break; }
             case 5: { redAgent = new MCTS(this.redTeam, this.redAgentSimulations); break; }
             case 6: { redAgent = new MoveReorderPruner(this.redTeam, this.redAgentDepth); break; }
-            case 10: { redAgent = new MCTS2(this.redTeam, this.redAgentSimulations); break; }
-            case 11: { redAgent = new TDLearner2(this.redTeam, this.redAgentDepth, this.weigths_1); break; }
-            case 12: { redAgent = new TDLearnerTrained2(this.redTeam, this.redAgentDepth); break; }
-            //TODO - dopisanie naszych
+            case 7: { redAgent = new MCTS2(this.redTeam, this.redAgentSimulations); break; }
+            case 8: { redAgent = new TDLearner2(this.redTeam, this.redAgentDepth, this.weigths_1); break; }
+            case 9: { redAgent = new TDLearnerTrained2(this.redTeam, this.redAgentDepth); break; }
             default: redAgent = new HumanAgent(this.redTeam); break;
         }
         var blackAgent;
@@ -237,10 +237,9 @@ export class BoardComponent implements OnInit {
             // TDLearner
             case 5: { blackAgent = new MCTS(this.blackTeam, this.blackAgentSimulations); break; }
             case 6: { blackAgent = new MoveReorderPruner(this.blackTeam, this.blackAgentDepth); break; }
-            case 10: { blackAgent = new MCTS2(this.blackTeam, this.blackAgentSimulations); break; }
-            case 11: { blackAgent = new TDLearner2(this.blackTeam, this.blackAgentDepth, this.weigths_2); break; }
-            case 12: { blackAgent = new TDLearnerTrained2(this.blackTeam, this.blackAgentDepth); break; }
-            // TODO dodanie naszych
+            case 7: { blackAgent = new MCTS2(this.blackTeam, this.blackAgentSimulations); break; }
+            case 8: { blackAgent = new TDLearner2(this.blackTeam, this.blackAgentDepth, this.weigths_2); break; }
+            case 9: { blackAgent = new TDLearnerTrained2(this.blackTeam, this.blackAgentDepth); break; }
             default: blackAgent = new GreedyAgent(this.blackTeam); break;
         }
         this.state = new State(redAgent, blackAgent);

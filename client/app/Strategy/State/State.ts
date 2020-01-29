@@ -21,16 +21,16 @@ export class State {
         }
     }
 
-    // TDlearning
-    learn(nSimulations) {
-        this.redAgent.update_weights(nSimulations, this.endFlag);
-        this.blackAgent.update_weights(nSimulations, this.endFlag);
-    }
-    record_feature(feature_vec) {
-        // console.log("record_feature")
-        this.redAgent.save_state(feature_vec);
-        this.blackAgent.save_state(feature_vec);
-    }
+    // // TDlearning
+    // learn(nSimulations) {
+    //     this.redAgent.update_weights(nSimulations, this.endFlag);
+    //     this.blackAgent.update_weights(nSimulations, this.endFlag);
+    // }
+    // record_feature(feature_vec) {
+    //     // console.log("record_feature")
+    //     this.redAgent.save_state(feature_vec);
+    //     this.blackAgent.save_state(feature_vec);
+    // }
 
     // return | 1:win | -1:lose | 0:continue for playing team
     getEndState() {

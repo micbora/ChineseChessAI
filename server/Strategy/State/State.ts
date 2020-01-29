@@ -100,9 +100,9 @@ export class State {
         if (agentDict.strategy == 3) agent = TDLearner.copyFromDict(agentDict);
         if (agentDict.strategy == 4) agent = TDLearnerTrained.copyFromDict(agentDict);
         if (agentDict.strategy == 5) agent = MCTS.copyFromDict(agentDict);
-        if (agentDict.strategy == 10) agent = MCTS2.copyFromDict(agentDict);
-        if (agentDict.strategy == 11) agent = TDLearner2.copyFromDict(agentDict);
-        if (agentDict.strategy == 12) agent = TDLearnerTrained2.copyFromDict(agentDict);
+        if (agentDict.strategy == 6) agent = MCTS2.copyFromDict(agentDict);
+        if (agentDict.strategy == 7) agent = TDLearner2.copyFromDict(agentDict);
+        if (agentDict.strategy == 8) agent = TDLearnerTrained2.copyFromDict(agentDict);
         var new_state;
         if (dict.playingTeam == 1) new_state = new State(agent, oppo, dict.playingTeam);
         else new_state = new State(oppo, agent, dict.playingTeam);

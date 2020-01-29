@@ -6,7 +6,7 @@ import { MCTS_State2 } from './MCTS_State2'
 
 export class MCTS2 extends Agent {
 
-    strategy = 10;
+    strategy = 6;
     N_SIMULATION;
 
     constructor(team, pieces, N) {

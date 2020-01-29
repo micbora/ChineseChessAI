@@ -9,7 +9,7 @@ import { MoveReorderPruner } from '../MoveReorderPruner/MoveReorderPruner'
 export class MCTS2 extends Agent {
 
 
-    strategy = 10;
+    strategy = 6;
     N_SIMULATION;
     copy() {
         return new MCTS2(this.team, this.N_SIMULATION, this.myPieces.map(x => x.copy()), this.pastMoves);
