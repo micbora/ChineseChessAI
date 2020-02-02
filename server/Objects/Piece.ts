@@ -28,4 +28,7 @@ export class Piece {
         return new Piece(this.name, this.position);
     }
 
+    toString() : string {
+        return this.name + "-" + this.position;
+    }
 }

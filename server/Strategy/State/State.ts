@@ -50,7 +50,11 @@ export class State {
         var agent = nextState.get_playing_agent().oppoAgent;
         // console.log(agent);
         // console.log("movePieceName", movePieceName)
-        agent.movePieceTo(agent.getPieceByName(movePieceName), toPos);
+        let mpn = agent.getPieceByName(movePieceName);
+        if (typeof mpn === "undefined") {
+            mpn = movePieceName;
+        }
+        agent.movePieceTo(mpn, toPos);
         return nextState;
 
     }

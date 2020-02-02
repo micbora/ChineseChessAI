@@ -21,22 +21,6 @@ export class MCTS2 extends Agent {
 
     // return [piece:Piece, toPos];
     comptuteNextMove(state) {
-        /*
-
-            1. kopiujemy bieżący stan planszy
-            2. w każdej symulacji
-                a) losowy wybór figury
-                b) określenie możliwych ruchów
-                c) wybór:
-                    i. kończącego grę
-                    ii. ratującego grę
-                    iii. losowego
-                    iv. lub zbijającego najwyższą figurę ewentualnie
-                    v. inna wybrana polityka
-                d) przeprowadzenie dalszej symulacji losowo/zachłannie i podliczenie zwycięstw po każdej rozgrywce
-                e) wybór "najlepszego" ruchu
-         */
-
         var root = new MCTS_State2(state, this.N_SIMULATION);
         root.simulate();
         return root.getBestMove();
