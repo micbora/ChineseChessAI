@@ -15,11 +15,13 @@ export class TDLearner2 extends Reorder {
 
     constructor(team: number, myPieces, depth, weights) {
         super(team, myPieces, depth);
-        this.weights = weights;
+        var my_weights = weights.slice(0, 3);
+        this.weights = my_weights;
     }
 
     static copyFromDict(dict) {
-        return new TDLearner2(dict.team, this.piecesFromDict(dict.myPieces), dict.DEPTH, dict.weights);
+        var weights = dict.weights.slice(0, 3);
+        return new TDLearner2(dict.team, this.piecesFromDict(dict.myPieces), dict.DEPTH, weights);
     }
 
     getValueOfState(state: State) {
@@ -53,9 +55,8 @@ export class TDLearner2 extends Reorder {
     extract_agent_feature(agent, state) {
         var num_threat = this.get_num_threatening(agent, state);
         var num_capture = this.get_num_captures(agent, state);
-        var num_center_cannon = StateFeatureExtractor.num_center_cannon(agent)
-        var num_bottom_cannon = StateFeatureExtractor.num_bottom_cannon(agent);
-        var feature_vec = [num_threat, num_capture, num_center_cannon, num_bottom_cannon];
+        var num_cannon = StateFeatureExtractor.num_center_cannon(agent) + StateFeatureExtractor.num_bottom_cannon(agent)''
+        var feature_vec = [num_threat, num_capture, num_cannon];
         return feature_vec;
     }
 

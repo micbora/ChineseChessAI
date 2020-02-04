@@ -377,8 +377,10 @@ export class BoardComponent implements OnInit {
                 var move = result['move'];
                 var time = parseInt(result['time']);
                 var state_feature = result['state_feature'];
+                var state_feature_2 = result['state_feature_2'];
                 if (time) this.report_runtime(agent.strategy, ((agent instanceof MCTS || agent instanceof MCTS2) ? agent.N_SIMULATION : agent.DEPTH), time)
                 if (state_feature) agent.save_state(state_feature);
+                if (state_feature_2) agent.save_state(state_feature_2);
                 if (!move) { // FAIL
                     this.end_game(-1);
                     return;

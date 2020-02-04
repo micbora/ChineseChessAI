@@ -111,9 +111,9 @@ export class WinRaterComponent implements OnInit {
     get_plot_title() {
         var red;
         // console.log(this.agent_param)
-        if (!this.humanMode) red = this.names[this.agent_param[0]] + "-Depth " + this.agent_param[1];
+        if (!this.humanMode) red = this.names[this.agent_param[0]] ;
         else red = "You ";
-        var black = this.names[this.agent_param[2]] + "-Depth " + this.agent_param[3];
+        var black = this.names[this.agent_param[2]];
         var first = this.team == 1 ? red : black;
         var second = this.team == 1 ? black : red;
         return first + "( vs " + second + " )" + " Win Rate";

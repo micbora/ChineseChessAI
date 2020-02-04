@@ -62,6 +62,7 @@ app.put('/compute/', function(request, response) {
     var t = (now - start);
 
     var feature_vec = null;
+    var feature_vec_2 = null;
 
     var playing = state.get_playing_agent();
     //TODO nasze td
@@ -71,9 +72,9 @@ app.put('/compute/', function(request, response) {
     }
     else if (playing.check_king_exist() && (playing instanceof TDLearner2) && !state.is_repeating && !(playing instanceof TDLearnerTrained2)) {
         // console.log(playing.weights)
-        feature_vec = playing.extract_state_feature(playing, state, playing.oppoAgent);
+        feature_vec_2 = playing.extract_state_feature(playing, state, playing.oppoAgent);
     }
-    response.end(JSON.stringify({ "move": next, "time": t, "state_feature": feature_vec }));
+    response.end(JSON.stringify({ "move": next, "time": t, "state_feature": feature_vec, "state_feature_2": feature_vec_2}));
     // nasze mcts
     var param = (playing instanceof MCTS) ? playing.N_SIMULATION : playing.DEPTH;
     console.log("Agent { ", playing.strategy + "-" + param, "} Compute Move Using: ", t, " ms");
